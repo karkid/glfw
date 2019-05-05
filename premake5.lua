@@ -1,50 +1,53 @@
 project "GLFW"
     kind "StaticLib"
     language "C"
+    systemversion "latest"
+    staticruntime "On"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    defines { "_CRT_SECURE_NO_WARNINGS" }
+
     files
     {
-    "include/GLFW/glfw3.h",
-    "include/GLFW/glfw3native.h",
-    "src/glfw_config.h.in",
-    "src/context.c",
-    "src/init.c",
-    "src/input.c",
-    "src/monitor.c",
-    "src/vulkan.c",
-    "src/window.c"
+        "include/GLFW/glfw3.h",
+        "include/GLFW/glfw3native.h",
+        "src/glfw_config.h.in",
+        "src/context.c",
+        "src/init.c",
+        "src/input.c",
+        "src/monitor.c",
+        "src/vulkan.c",
+        "src/window.c"
     }
 
+    --Visual Studio IDE specific setting for Window system
     filter "system:windows"
-        buildoptions { "-std=c11", "-lgdi32" }
-        systemversion "latest"
-        staticruntime "On"
+        defines { "_GLFW_WIN32" }
+
+        buildoptions 
+        { 
+            "-std=c11", 
+            "-lgdi32" 
+        }
 
         files
         {
-        "src/win32_init.c",
-        "src/win32_joystick.c",
-        "src/win32_monitor.c",
-        "src/win32_time.c",
-        "src/win32_thread.c",
-        "src/win32_window.c",
-        "src/wgl_context.c",
-        "src/egl_context.c",
-        "src/osmesa_context.c"
+            "src/win32_init.c",
+            "src/win32_joystick.c",
+            "src/win32_monitor.c",
+            "src/win32_time.c",
+            "src/win32_thread.c",
+            "src/win32_window.c",
+            "src/wgl_context.c",
+            "src/egl_context.c",
+            "src/osmesa_context.c"
         }
 
-        defines
-        {
-        "_GLFW_WIN32",
-        "_CRT_SECURE_NO_WARNINGS"
-        }
-    filter { "system:windows", "configurations:Release" }
-        buildoptions "/MT"
-
+    --XCode IDE specific setting for Mac system
     filter "system:macosx"
+        defines { "_GLFW_COCOA" }
         buildoptions
         {
             "-std=c11",
@@ -53,24 +56,20 @@ project "GLFW"
             "-framework CoreFoundation",
             "-framework CoreVideo",
         }
-        systemversion "latest"
-        staticruntime "On"
 
         files
         {
-        "src/cocoa_init.m",
-        "src/cocoa_joystick.m",
-        "src/cocoa_monitor.m",
-        "src/cocoa_time.c",
-        "src/posix_thread.c",
-        "src/cocoa_window.m",
-        "src/osmesa_context.c",
-        "src/egl_context.c",
-        "src/nsgl_context.m"
+            "src/cocoa_init.m",
+            "src/cocoa_joystick.m",
+            "src/cocoa_monitor.m",
+            "src/cocoa_time.c",
+            "src/posix_thread.c",
+            "src/cocoa_window.m",
+            "src/osmesa_context.c",
+            "src/egl_context.c",
+            "src/nsgl_context.m"
         }
 
-        defines
-        {
-        "_GLFW_COCOA",
-        "_CRT_SECURE_NO_WARNINGS"
-        }
+    --Configuration specific settings for all system
+    filter "configurations:Release"
+        runtime "Release"
