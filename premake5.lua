@@ -25,13 +25,6 @@ project "GLFW"
     --Visual Studio IDE specific setting for Window system
     filter "system:windows"
         defines { "_GLFW_WIN32" }
-
-        buildoptions 
-        { 
-            "-std=c11", 
-            "-lgdi32" 
-        }
-
         files
         {
             "src/win32_init.c",
@@ -71,5 +64,10 @@ project "GLFW"
         }
 
     --Configuration specific settings for all system
+    filter "configurations:Debug"
+        symbols "on"
+        runtime "Debug"
+
     filter "configurations:Release"
+        optimize "on"
         runtime "Release"
